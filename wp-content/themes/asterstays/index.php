@@ -1,0 +1,6 @@
+<?php get_header(); ?>
+<section class="aster-archive-hero"><div class="aster-container"><div class="aster-breadcrumb"><a href="<?php echo esc_url(home_url('/')); ?>">Home</a><span>/</span><span>Journal</span></div><span class="aster-eyebrow">Notes for the road</span><h1>Stories for the <em>in-between.</em></h1><p>Small ideas for a life well wandered.</p></div></section>
+<section class="aster-archive-content aster-container"><div class="aster-journal-grid"><?php if(have_posts()): while(have_posts()): the_post(); ?>
+<article class="aster-journal-card"><a class="aster-journal-card__image" href="<?php the_permalink(); ?>"><?php if(has_post_thumbnail()): the_post_thumbnail('large',array('loading'=>'lazy')); else: ?><img src="<?php echo esc_url(get_theme_file_uri('/assets/images/coorg.jpg')); ?>" alt="" loading="lazy"><?php endif; ?></a><span class="aster-eyebrow"><?php echo esc_html(get_the_date('M j, Y')); ?></span><h3><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h3><p><?php echo esc_html(get_the_excerpt()); ?></p><a class="aster-text-link" href="<?php the_permalink(); ?>">Read story <span>↗</span></a></article>
+<?php endwhile; else: ?><p>There are no stories here yet.</p><?php endif; ?></div><?php the_posts_pagination(); ?></section>
+<?php get_footer(); ?>

@@ -1,0 +1,16 @@
+<?php
+get_header();
+while(have_posts()): the_post();
+$id=get_the_ID(); $image=get_post_meta($id,'_aster_image',true); if(!$image && has_post_thumbnail()) $image=get_the_post_thumbnail_url($id,'full');
+$guests=absint(get_post_meta($id,'_aster_guests',true)); $beds=absint(get_post_meta($id,'_aster_bedrooms',true)); $baths=absint(get_post_meta($id,'_aster_bathrooms',true)); $rating=(float)get_post_meta($id,'_aster_rating',true);
+$amenities=array_filter(array_map('trim',explode(',',get_post_meta($id,'_aster_amenities',true)))); $terms=get_the_terms($id,'stay_region'); $region=$terms && !is_wp_error($terms) ? $terms[0]->name : 'Aster collection';
+?>
+<article <?php post_class('aster-single-stay'); ?>><div class="aster-single-hero aster-container"><div class="aster-breadcrumb"><a href="<?php echo esc_url(home_url('/')); ?>">Home</a><span>/</span><a href="<?php echo esc_url(get_post_type_archive_link('stay')); ?>">Stays</a><span>/</span><span><?php echo esc_html($region); ?></span></div>
+<div class="aster-single-heading"><div><span class="aster-eyebrow"><?php echo esc_html($region); ?> · Aster stays</span><h1><?php the_title(); ?></h1><p><?php the_excerpt(); ?></p></div><div class="aster-single-rating"><span>★</span><strong><?php echo esc_html(number_format_i18n($rating,2)); ?></strong><span>Guest rating</span></div></div>
+<?php if($image): ?><div class="aster-single-cover"><img src="<?php echo esc_url($image); ?>" alt="<?php echo esc_attr(get_the_title()); ?>" width="1600" height="900"><span class="aster-single-cover__caption">An Aster stay, <?php echo esc_html($region); ?></span></div><?php endif; ?></div>
+<div class="aster-single-layout aster-container"><div class="aster-single-main"><div class="aster-stay-facts"><span><?php echo esc_html($guests); ?> guests</span><i>·</i><span><?php echo esc_html($beds); ?> bedrooms</span><i>·</i><span><?php echo esc_html($baths); ?> baths</span></div><div class="aster-single-content"><?php the_content(); ?></div>
+<?php if($amenities): ?><section class="aster-amenities"><span class="aster-eyebrow">The little comforts</span><h2>Thoughtful <em>details.</em></h2><ul><?php foreach($amenities as $amenity): ?><li><span>✳</span><?php echo esc_html($amenity); ?></li><?php endforeach; ?></ul></section><?php endif; ?>
+<section class="aster-host-card"><span class="aster-host-card__mark">a</span><div><span class="aster-eyebrow">A note from your host</span><h3>Here when you need us. Never in your way.</h3><p>Need a little local advice before you arrive? Send an enquiry and we’ll help you get settled.</p><a class="aster-text-link" href="#stay-enquiry">Ask your host <span>↗</span></a></div></section>
+<section class="aster-single-enquiry" id="stay-enquiry"><?php echo do_shortcode('[aster_inquiry_form stay_id="'.esc_attr($id).'" title="Ask about this stay"]'); ?></section></div>
+<aside class="aster-booking-aside"><div class="aster-booking-card"><span class="aster-eyebrow">Make it a little getaway</span><?php echo do_shortcode('[aster_booking_form stay_id="'.esc_attr($id).'"]'); ?><p class="aster-booking-card__secure"><span>⌑</span> Simple, secure checkout with WooCommerce.</p></div></aside></div></article>
+<?php endwhile; get_footer(); ?>
